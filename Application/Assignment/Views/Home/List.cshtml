@@ -1,0 +1,202 @@
+﻿
+@model X.PagedList.IPagedList<Assignment.ViewModel.EmployeeVM>
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+@{
+    ViewData["Title"] = "List";
+}
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-10 offset-md-0 col-lg-11 col-xl-11">
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Department</th>
+                        <th>Residency</th>
+                        <th>Gender</th>
+                        <th>Birthday</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><input type="checkbox" class="number" name="type" value="@item.Id" /></td>
+                            <td>@item.Name</td>
+                            <td>@item.Address</td>
+                            <td>@item.Department</td>
+                            <td>@item.Residency</td>
+                            <td>@item.Gender</td>
+                            <td>@item.Birthdate.ToString("dd-MM-yyyy")</td>
+                            <td>@item.Phone</td>
+                            <td>
+                                <a asp-action="UpdateEmployee" asp-controller="Home" asp-route-id="@item.Id">
+                                    <i class="fas fa-pencil-alt"
+                                       style="color:forestgreen"></i>
+                                </a> &nbsp;&nbsp;
+                                <a onclick="MyDeleteConfirm()" asp-action="DeleteEmployee" asp-controller="Home"
+                                   asp-route-id="@item.Id"><i class="fas fa-trash" style="color:red"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.PagedListPager((IPagedList)Model, c => Href("/Home/List?page=" + c),
+                           new X.PagedList.Mvc.Common.PagedListRenderOptionsBase
+                           {
+                               PageClasses = new string[] { "page-link" },
+                               UlElementClasses = new string[] { "pagination" },
+                               LiElementClasses = new string[] { "page-item" },
+                           })
+        </div>
+        <div class="form-group row p-0">
+            <label class="col-sm-2 col-form-label">Select Format</label>
+            <div class="col-sm-10 col-lg-3">
+                <select class="form-control" id="format">
+                    <option value="PDF">PDF</option>
+                    <option value="DOC">DOC</option>
+                    <option value="EXCEL">EXCEL</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-9">
+            <button disabled id="print" type="button" class="btn btn-outline-secondary">
+                Print   
+            </button>
+        </div>
+
+        <div class="mt-3" id="PRINT">
+
+        </div>       
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        function MyDeleteConfirm() {
+            event.preventDefault();
+            var anchor = event.target.closest("a");     // Find closest Anchor (or self)
+            console.log(anchor.getAttribute('href'));
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = anchor.getAttribute('href');
+                    //Swal.fire(
+                    //  'Deleted!',
+                    //  'Your file has been deleted.',
+                    //  'success'
+                    //  )                                      
+                }
+            })
+        }
+
+
+        $(document).ready(function () {
+
+            $(".number").on("click", function () {
+                if ($(".number:checked").length > 0) {
+                    $('.btn').prop('disabled', false);
+                }
+                else {
+                    $('.btn').prop('disabled', true);
+                }
+            });
+
+
+            $("#PRINT").hide();
+            $("#print").click(function () {
+
+                $("#PRINT").empty();
+                var items = "";
+                items += '<table class="table table-bordered text-center" id="forExcel">';
+                items += '<thead>';
+                items += '<tr>';
+                items += '<th>Name</th>';
+                items += '<th>Address</th>';
+                items += '<th>Department</th>';
+                items += '<th>Residency</th>';
+                items += '<th>Gender</th>';
+                items += '<th>Birthday</th>';
+                items += '<th>Phone</th>';
+                items += '</tr>';
+                items += '</thead>';
+                items += '<tbody>';
+                $("input:checkbox[name=type]:checked").each(function () {
+                    items += '<tr>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(1)').text() + '</td>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(2)').text() + '</td>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(3)').text() + '</td>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(4)').text() + '</td>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(5)').text() + '</td>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(6)').text() + '</td>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(7)').text() + '</td>';
+                    items += '<tr>';
+                });
+                items += '<tbody>';
+                items += '</table>';
+
+                $("#PRINT").append(items);
+
+                var formatName = $("#format option:selected").text();
+
+                if (formatName == "PDF") {
+
+                    var element = document.getElementById('forExcel');
+                    // Generate the PDF.
+                    const options = {
+                        filename: 'Assignment.pdf',
+                        image: { type: 'jpeg' },
+                        html2canvas: { scale: 1 },
+                        margin: [0.8, 0.2, 0, 0.2],
+                        jsPDF: {
+                            orientation: 'Portrait',
+                            unit: 'in', format: 'A4',
+                            compressPDF: true,
+                        }
+                    };
+                    html2pdf().from(element).set(options).save();
+                }
+                else if (formatName == "DOC") {
+
+                    var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+                        "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+                        "xmlns='http://www.w3.org/TR/REC-html40'>" +
+                        "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+                    var footer = "</body></html>";
+                    var sourceHTML = header + document.getElementById("PRINT").innerHTML + footer;
+
+                    var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+                    var fileDownload = document.createElement("a");
+                    document.body.appendChild(fileDownload);
+                    fileDownload.href = source;
+                    fileDownload.download = 'Assignment.doc';
+                    fileDownload.click();
+                    document.body.removeChild(fileDownload);
+                }
+                else if (formatName == "EXCEL") {
+
+                    $("#forExcel").table2excel({
+                        filename: "Assignment.xls"
+                    });
+                }
+            });
+
+        });
+
+    </script>
+}

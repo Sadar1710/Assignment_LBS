@@ -1,0 +1,17 @@
+This is just an crud operation where i have used Asp .net core and sql server.
+
+Application Name:- Assignment
+Database:- Assignment2
+
+Software Requirement:-
+     -Visual Studio 2019
+     -Sql Server
+To run this application open the application in visual studio 2019. Though i have given the database scripts but you do not need to import the database because i have used auto migration that's why if you run the project then the database will be automatically created. Just change the source name which is located in app.setting json file.
+
+Here,
+    -You can add employee information 
+    -You can see the list of employee information 
+    -You can update employee information
+    -You can delete employee
+    -You can print report in three format pdf/doc/excel
+    -Check the checkboxes the row you want to print then select the format and then print it.

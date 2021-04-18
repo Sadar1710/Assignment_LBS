@@ -1,0 +1,135 @@
+﻿
+@model Assignment.ViewModel.EmployeeVM
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<form enctype="multipart/form-data" asp-controller="Home" asp-action="Index" method="post">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Name:</label>
+        <div class="col-sm-10 col-lg-6">
+            <input asp-for="Name" type="text" class="form-control" id="name" placeholder="Enter Your Name">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Address:</label>
+        <div class="col-sm-10 col-lg-6">
+            <textarea asp-for="Address" data-val="true" class="form-control" placeholder=" Enter Text&#x0a Enter More Text"></textarea>
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Department:</label>
+        <div class="col-sm-10 col-lg-6">
+            <select asp-items="@ViewBag.Department" class="form-control" asp-for="DeptId">
+                <option disabled hidden selected>Select a Department</option>
+            </select>
+            <span asp-validation-for="Department" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Residency:</label>
+        <div class="form-check form-check-inline pl-2">
+            <input asp-for="Residency" class="form-check-input" type="radio" name="Residency" id="inlineRadio1" value="Bangladeshi" checked>
+            <label class="form-check-label" for="inlineRadio1">Bangladeshi</label>
+        </div>
+        <div class="form-check form-check-inline pl-2">
+            <input asp-for="Residency" class="form-check-input" type="radio" name="Residency" id="inlineRadio2" value="Non-Bangladeshi">
+            <label class="form-check-label" for="inlineRadio2">Non-Bangladeshi</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Gernder:</label>
+        <div class="form-check form-check-inline pl-2">
+            <input asp-for="Gender" class="form-check-input" type="checkbox" name="Gender" id="male" value="Male" checked>
+            <label class="form-check-label" asp-for="Gender">Male</label>
+        </div>
+        <div class="form-check form-check-inline pl-2">
+            <input asp-for="Gender" class="form-check-input" type="checkbox" name="Gender" id="female" value="Female">
+            <label class="form-check-label" asp-for="Gender">Female</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Birthday:</label>
+        <div class="col-sm-10 col-lg-4">
+            <input asp-for="Birthdate" class="form-control" type="date" />
+            <span asp-validation-for="Birthdate" class="text-danger"></span>
+
+        </div>
+    </div>
+    <img src="~/images/default.png" id="output" style="height:100px;width:100px;margin-left:190px;margin-bottom:2px;" />
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Upload Photo:</label>
+        <div class="col-sm-10 col-lg-5">
+            <div class="custom-file">
+                <input asp-for="Photo" id="input" class="form-control custom-file-input" style="cursor:pointer;">
+                <label class="custom-file-label" style="overflow:hidden;">...</label>
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Phone:</label>
+        <div class="col-sm-10 col-lg-5">
+            <input asp-for="Phone" type="number" class="form-control" placeholder="Enter Phone number">
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-outline-primary">Submit</button>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {            
+
+            var a = null;
+            $('input[type="checkbox"]').click(function () {
+                $('input[type="checkbox"]').not(this).prop("checked", false);
+                if ($(this).is(":checked")) {
+                    console.log("Checkbox is checked.");
+                }
+                else if ($(this).is(":not(:checked)")) {
+                    console.log("Checkbox is unchecked.");
+                }
+            });
+
+         a = "@ViewBag.Alert"
+         console.log(a);
+         if(a.length !== 0) {
+            Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: 'Successfully Added.',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        }
+        });
+
+        $('.custom-file-input').on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).next('.custom-file-label').html(fileName);
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#output').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#input").change(function () {
+            readURL(this);
+        });
+
+    </script>
+}
