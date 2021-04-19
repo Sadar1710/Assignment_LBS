@@ -15,24 +15,5 @@ namespace Assignment.DataContext
         }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<Department>Department { get; set; }
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            builder.Entity<Department>().HasData(new Department
-            {
-                DepartmentId = 1,
-                DepartmentName = "CSE"
-            });
-            builder.Entity<Department>().HasData(new Department
-            {
-                DepartmentId = 2,
-                DepartmentName = "EEE"
-            });
-            builder.Entity<Department>().HasData(new Department
-            {
-                DepartmentId = 3,
-                DepartmentName = "BBA"
-            });
-        }
     }
 }

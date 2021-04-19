@@ -18,6 +18,7 @@
                         <th>Department</th>
                         <th>Residency</th>
                         <th>Gender</th>
+                        <th>Photo</th>
                         <th>Birthday</th>
                         <th>Phone</th>
                         <th>Action</th>
@@ -26,24 +27,26 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td><input type="checkbox" class="number" name="type" value="@item.Id" /></td>
-                            <td>@item.Name</td>
-                            <td>@item.Address</td>
-                            <td>@item.Department</td>
-                            <td>@item.Residency</td>
-                            <td>@item.Gender</td>
-                            <td>@item.Birthdate.ToString("dd-MM-yyyy")</td>
-                            <td>@item.Phone</td>
-                            <td>
-                                <a asp-action="UpdateEmployee" asp-controller="Home" asp-route-id="@item.Id">
-                                    <i class="fas fa-pencil-alt"
-                                       style="color:forestgreen"></i>
-                                </a> &nbsp;&nbsp;
-                                <a onclick="MyDeleteConfirm()" asp-action="DeleteEmployee" asp-controller="Home"
-                                   asp-route-id="@item.Id"><i class="fas fa-trash" style="color:red"></i></a>
-                            </td>
-                        </tr>
+                        var photo = "~/images/" + (item.PhotoPath ?? "default.png");
+                    <tr>
+                        <td><input type="checkbox" class="number" name="type" value="@item.Id" /></td>
+                        <td>@item.Name</td>
+                        <td>@item.Address</td>
+                        <td>@item.Department</td>
+                        <td>@item.Residency</td>
+                        <td>@item.Gender</td>
+                        <td style="padding:0;margin:0;"><img src="@photo" asp-append-version="true" style="height:50px;width:50px;"></td>
+                        <td>@item.Birthdate.ToString("dd-MM-yyyy")</td>
+                        <td>@item.Phone</td>
+                        <td>
+                            <a asp-action="UpdateEmployee" asp-controller="Home" asp-route-id="@item.Id">
+                                <i class="fas fa-pencil-alt"
+                                   style="color:forestgreen"></i>
+                            </a> &nbsp;&nbsp;
+                            <a onclick="MyDeleteConfirm()" asp-action="DeleteEmployee" asp-controller="Home"
+                               asp-route-id="@item.Id"><i class="fas fa-trash" style="color:red"></i></a>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -79,7 +82,7 @@
 
 @section Scripts{
     <script type="text/javascript">
-
+        var b = null;
         function MyDeleteConfirm() {
             event.preventDefault();
             var anchor = event.target.closest("a");     // Find closest Anchor (or self)
@@ -100,13 +103,19 @@
                     //  'Deleted!',
                     //  'Your file has been deleted.',
                     //  'success'
-                    //  )                                      
+                    //  )
                 }
             })
         }
 
 
         $(document).ready(function () {
+            b = "@ViewBag.success"
+             console.log(b);
+           if (b.length !== 0) {
+               alertify.success(b);
+             }
+
 
             $(".number").on("click", function () {
                 if ($(".number:checked").length > 0) {
@@ -143,8 +152,8 @@
                     items += '<td>' + $(this).closest("tr").find('td:eq(3)').text() + '</td>';
                     items += '<td>' + $(this).closest("tr").find('td:eq(4)').text() + '</td>';
                     items += '<td>' + $(this).closest("tr").find('td:eq(5)').text() + '</td>';
-                    items += '<td>' + $(this).closest("tr").find('td:eq(6)').text() + '</td>';
                     items += '<td>' + $(this).closest("tr").find('td:eq(7)').text() + '</td>';
+                    items += '<td>' + $(this).closest("tr").find('td:eq(8)').text() + '</td>';
                     items += '<tr>';
                 });
                 items += '<tbody>';

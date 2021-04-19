@@ -1,0 +1,52 @@
+﻿@model Assignment.ViewModel.DepartmentVM
+@{
+    ViewData["Title"] = "AddDepartment";
+}
+
+<form class="row mt-5" asp-controller="Home"
+      asp-action="AddDepartment" method="post">
+    <div class="col-12 col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 col-xl-8" id="formdiv">
+        <h2 class="text-center">Add New Department</h2>
+        <div class="form-group">
+            <label>Enter Department Title:</label>
+            <input class="form-control" placeholder="Enter Department Name..." asp-for="DepartmentName" />
+            <span asp-validation-for="DepartmentName" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-dark">Add</button>
+    </div>
+</form>
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+
+        var a = null;
+        var b = null;
+         $(document).ready(function () {
+
+             a ="@ViewBag.Validation"
+             b ="@ViewBag.Success"
+             console.log(a);
+             if (a.length !== 0) {
+                 Swal.fire({
+                     position: 'top-center',
+                     icon: 'warning',
+                     title: a,
+                     showConfirmButton: false,
+                     timer: 2000
+                 })
+             }
+             else if (b.length !== 0) {
+                  Swal.fire({
+                     position: 'top-center',
+                     icon: 'success',
+                     title: b,
+                     showConfirmButton: false,
+                     timer: 2000
+                 })
+             }
+         });
+    </script>
+}

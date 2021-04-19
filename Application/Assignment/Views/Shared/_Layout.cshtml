@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="~/Assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="~/Assets/css/all.css">
         <link rel="stylesheet" href="~/SweetAlert/sweetalert2.min.css">
+        <link rel="stylesheet" href="~/css/alertify.min.css">
     </environment>
     
     @RenderSection("Styles", false)
@@ -23,12 +24,30 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Department
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="AddDepartment">Add</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="DepartmentList">List</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Employee
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Home" asp-action="Index">Add</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Home" asp-action="List">List</a>
+                            </div>
+                        </li>
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Add</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="List">List</a>
-                        </li>
+                        </li>*@
                     </ul>
                 </div>
             </div>
@@ -46,6 +65,8 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script type="text/javascript" src="~/SweetAlert/sweetalert2.all.min.js"></script>
         <script type="text/javascript" src="~/js/html2pdf.bundle.js"></script>
+        <script type="text/javascript" src="~/js/alertify.js"></script>
+        <script type="text/javascript" src="~/js/alertify.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js">
         </script>
         <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js">

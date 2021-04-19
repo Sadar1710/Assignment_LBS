@@ -80,8 +80,9 @@ namespace Assignment.Controllers
             }
             return uniqueFileName;
         }
-        public IActionResult List(int Page = 1)
+        public IActionResult List(string success,int Page = 1)
         {
+            ViewBag.success = success;
             var list = _context.Employee.Include(s => s.Department).ToList();
             var aa = new List<EmployeeVM>();
             int c = 1;
@@ -97,7 +98,8 @@ namespace Assignment.Controllers
                     Residency = item.Residency,
                     Gender = item.Gender,
                     Birthdate = item.Birthdate,
-                    Phone = item.Phone
+                    Phone = item.Phone,
+                    PhotoPath=item.Photo
                 };
                 aa.Add(ab);
             }
@@ -150,7 +152,7 @@ namespace Assignment.Controllers
             _context.Employee.Update(employee);
             _context.SaveChanges();
             ModelState.Clear();
-            return RedirectToAction("List");
+            return RedirectToAction("List", new { success = "Successfully Updated." });
         }
         public IActionResult DeleteEmployee(int id)
         {
@@ -159,7 +161,92 @@ namespace Assignment.Controllers
             _context.SaveChanges();
             return RedirectToAction("List");
         }
+        public IActionResult AddDepartment()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddDepartment(DepartmentVM departmentVM)
+        {
+            var valid = _context.Department.AsNoTracking().
+                Where(t => t.DepartmentName == departmentVM.DepartmentName).FirstOrDefault();
+            if (valid != null)
+            {
+                ViewBag.Validation = "You have already added " + departmentVM.DepartmentName + ".";
+                return View();
+            }
+            Department m = new Department()
+            {
+                DepartmentId = 0,
+                DepartmentName = departmentVM.DepartmentName
+            };
+            _context.Department.Add(m);
+            _context.SaveChanges();
+            ViewBag.Success = "You have succesfully added " + departmentVM.DepartmentName + ".";
+            ModelState.Clear();
+            return View();
+        }
+        public IActionResult DepartmentList(string success)
+        {
+            ViewBag.success = success;
+            var list = _context.Department.AsNoTracking().ToList();
+            var a = new List<DepartmentVM>();
+            int c = 1;
+            foreach (var item in list)
+            {
+                DepartmentVM d = new DepartmentVM()
+                {
+                    Serial = c,
+                    DepartmentId = item.DepartmentId,
+                    DepartmentName = item.DepartmentName
+                };
+                a.Add(d);
+                c++;
+            }
+            return View(a);
+        }
+        public IActionResult DeleteDepartment(int id)
+        {
+            var data = _context.Department.AsNoTracking()
+                    .Where(t => t.DepartmentId == id).FirstOrDefault();
+            _context.Department.Remove(data);
+            _context.SaveChanges();
+            return RedirectToAction("DepartmentList");
+        }
+        public IActionResult UpdateDepartment(int id)
+        {
 
+            var mealhourVm = _context.Department.AsNoTracking()
+                 .Where(t => t.DepartmentId == id).FirstOrDefault();
+            DepartmentVM m = new DepartmentVM()
+            {
+                DepartmentId = mealhourVm.DepartmentId,
+                DepartmentName = mealhourVm.DepartmentName
+
+            };
+            return View(m);
+        }
+        [HttpPost]
+        public IActionResult UpdateDepartment(DepartmentVM departmentVM)
+        {
+            var valid = _context.Department.AsNoTracking().
+                Where(t => t.DepartmentName == departmentVM.DepartmentName).FirstOrDefault();
+            if (valid != null)
+            {
+                ViewBag.Validation = "You have already added.";
+                return View();
+            }
+            Department m = new Department()
+            {
+                DepartmentId = departmentVM.DepartmentId,
+                DepartmentName = departmentVM.DepartmentName
+            };
+            _context.Department.Update(m);
+            _context.SaveChanges();
+            //ViewBag.success = "Updated Succesfully.";
+            ModelState.Clear();           
+            return RedirectToAction("DepartmentList", new { success = "Successfully Updated." });
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

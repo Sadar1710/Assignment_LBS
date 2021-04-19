@@ -1,7 +1,7 @@
 This is just an crud operation where i have used Asp .net core and sql server.
 
 Application Name:- Assignment
-Database:- Assignment2
+Database:- Assignment3
 
 Software Requirement:-
      -Visual Studio 2019
